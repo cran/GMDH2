@@ -1,0 +1,15 @@
+4724eebad8b88ff27e690661a7089e1b *DESCRIPTION
+dcfdb5b5d4501a76583f1106a8e230c1 *NAMESPACE
+0ac8110d6a4f133c19e857a6c5793761 *R/Table.R
+945071c9eda7fbd3b795acef40fe94bb *R/confMat.R
+4619d250d89cf724d8ffff00ef4df951 *R/cplot2d.R
+eebcbd101c32135e05159b6f3a0a488e *R/cplot3d.R
+708301b400c4586811fa42a2c876f173 *R/dceGMDH.R
+9e8b95d6f6e4e6e560bd2762c5106a50 *R/predict.dceGMDH.R
+e6fccaaeeccc592264df8281ee5eef62 *man/GMDH2.Rd
+49e2d6a31a10bb2a3dd58644ff090944 *man/Table.Rd
+03aa8e58f7319c52d8fa93e229958bbe *man/confMat.Rd
+dff96b8539869031db7964a7d8a8c698 *man/cplot2d.Rd
+be29ebbb3aa33e31674d5921256fd815 *man/cplot3d.Rd
+514510edaa4fa4ecccce901fc3e2874c *man/dceGMDH.Rd
+865f39224d2450bbb2325cb10741b2c8 *man/predict.dceGMDH.Rd

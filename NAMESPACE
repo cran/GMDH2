@@ -1,0 +1,18 @@
+export(confMat, cplot2d, cplot3d, dceGMDH, Table)
+S3method(predict, dceGMDH)
+S3method(confMat, default)
+S3method(confMat, table)
+importFrom("utils", combn)
+importFrom("e1071", svm, naiveBayes)
+importFrom("graphics", abline, axis, par, plot, legend)
+importFrom("stats", predict, complete.cases, median, quantile, sd)
+importFrom("randomForest", randomForest)
+importFrom("glmnet", cv.glmnet)
+importFrom("nnet", nnet, class.ind)
+importFrom("MASS", ginv)
+importFrom("plotly", plot_ly, layout, add_markers)
+importFrom("magrittr", "%>%")
+importFrom("xtable", xtable)
+
+
+
