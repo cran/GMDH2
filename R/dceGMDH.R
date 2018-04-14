@@ -1,4 +1,4 @@
-dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 5, maxneurons = 15, exCriteria = "MSE", plot = TRUE, verbose = TRUE, svm_options, randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, ...){
+dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", plot = TRUE, verbose = TRUE, svm_options, randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, ...){
   
   
   call <- match.call()
@@ -10,9 +10,9 @@ dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 5, maxneurons = 
   ylevels <- levels(y)
   y <- factor(y, levels = ylevels, labels = 0:1)
   
-  if (exCriteria == "MSE")  {outname<- "Mean Square Error"
-}else if (exCriteria == "MAE") {outname<- "Mean Absolute Error"
-}else if (exCriteria == "MAPE") {outname<- "Mean Absolute Percentage Error"
+  if (exCriterion == "MSE")  {outname<- "Mean Square Error"
+}else if (exCriterion == "MAE") {outname<- "Mean Absolute Error"
+}else if (exCriterion == "MAPE") {outname<- "Mean Absolute Percentage Error"
 }else stop("Correct the external criterion argument.")
   
   
@@ -144,7 +144,7 @@ store[[i]][[1]]<-lapply(1:nnode, function(j) cbind(1, y.train_pred[, w[j, ]]))
 store[[i]][[2]]<-lapply(1:nnode, function(j) ginv(t(store[[i]][[1]][[j]]) %*% store[[i]][[1]][[j]]) %*% t(store[[i]][[1]][[j]]) %*% (as.numeric(y.train)-1))
 store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, y.validation_pred[, w[j, ]]))
 store[[i]][[4]]<-lapply(1:nnode, function(j) as.numeric(t(store[[i]][[2]][[j]]) %*% t(store[[i]][[3]][[j]])))
-store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriteria))
+store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriterion))
 store[[i]][[13]]<-length(which(unlist(store[[i]][[6]])<(1-alpha)*max(unlist(store[[i]][[6]]))+alpha*min(unlist(store[[i]][[6]]))))
 store[[i]][[14]]<-ifelse(store[[i]][[13]]>maxneurons,maxneurons,store[[i]][[13]]) 
 store[[i]][[7]]<-sort(order(unlist(store[[i]][[6]]), decreasing = FALSE)[1:store[[i]][[14]]])
@@ -174,7 +174,7 @@ if ((store[[i]][[12]]<min(base_perf))&(store[[i]][[14]]>1)){
     store[[i]][[2]]<-lapply(1:nnode, function(j) ginv(t(store[[i]][[1]][[j]]) %*% store[[i]][[1]][[j]]) %*% t(store[[i]][[1]][[j]]) %*% (as.numeric(y.train)-1))
     store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, store[[i-1]][[11]][, w[j, ]]))
     store[[i]][[4]]<-lapply(1:nnode, function(j) as.numeric(t(store[[i]][[2]][[j]]) %*% t(store[[i]][[3]][[j]])))
-    store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriteria))
+    store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriterion))
     store[[i]][[13]]<-length(which(unlist(store[[i]][[6]])<(1-alpha)*max(unlist(store[[i]][[6]]))+alpha*min(unlist(store[[i]][[6]]))))
     store[[i]][[14]]<-ifelse(store[[i]][[13]]>maxneurons,maxneurons,store[[i]][[13]]) 
     store[[i]][[7]]<-sort(order(unlist(store[[i]][[6]]), decreasing = FALSE)[1:store[[i]][[14]]])
@@ -243,7 +243,7 @@ if (nlayer==0){
 }
 
 structure <- as.data.frame(cbind(0:nlayer, "",tneurons,"",sneurons,"", perf))
-colnames(structure) <- c("Layer", "   ","Neurons","   ","Selected neurons","   ", paste("Min",exCriteria))
+colnames(structure) <- c("Layer", "   ","Neurons","   ","Selected neurons","   ", paste("Min",exCriterion))
 
 if (verbose) {
   cat("\n")

@@ -1,4 +1,4 @@
-Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(2,0), output = NULL) {
+Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(2,1), output = NULL) {
   
   if (class(x)!="data.frame") stop("x must be a data.frame.")
   if (class(y)!="factor") stop("y must be a factor.")

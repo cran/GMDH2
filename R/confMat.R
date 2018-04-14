@@ -31,8 +31,12 @@ store[2,] <- temp
 temp <- store[,1]
 store[,1] <- store[,2]
 store[,2] <- temp
+temp <- colnames(store)[1]
+colnames(store)[1] <- colnames(store)[2]
+colnames(store)[2] <- temp
+rownames(store) <- colnames(store)
 
-  }}
+  }}else{positive <- colnames(store)[1]}
     
   
   accuracy <- sum(diag(store))/sum(store)
@@ -142,8 +146,13 @@ store[2,] <- temp
 temp <- store[,1]
 store[,1] <- store[,2]
 store[,2] <- temp
+temp <- colnames(store)[1]
+colnames(store)[1] <- colnames(store)[2]
+colnames(store)[2] <- temp
+rownames(store) <- colnames(store)
 
-  }}
+
+  }}else{positive <- colnames(store)[1]}
     
   
   accuracy <- sum(diag(store))/sum(store)

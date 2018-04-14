@@ -1,17 +1,15 @@
-\name{dceGMDH}
-\alias{dceGMDH}
+\name{GMDH}
+\alias{GMDH}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Binary Classification
+Classification and Feature Selection via GMDH-Type Neural Network Algorithm for a Binary Response
 }
 \description{
-\code{dceGMDH} makes a binary classification via diverse classifiers ensemble Based on GMDH-Type Neural Network (dce-GMDH) Algorithm.
+\code{GMDH} makes classification and feature selection via GMDH-type neural network algorithm.
 }
 
-\usage{dceGMDH(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, 
-  exCriterion = "MSE", plot = TRUE, verbose = TRUE, svm_options, 
-  randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, 
-  ...)}
+\usage{GMDH(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, 
+  exCriterion = "MSE", plot = TRUE, verbose = TRUE, ...)}
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,11 +22,6 @@ Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Bin
   \item{exCriterion}{a character string to select an external criteria. "MSE": Mean Square Error, "MAE": Mean Absolute Error, "MAPE": Mean Absolute Percentage Error. Default is set to "MSE".} 
   \item{plot}{a logical to plot the minimum external criteria in layers. Defaults plot = TRUE.}
   \item{verbose}{a logical for printing summary output to R console.}
-  \item{svm_options}{a list for options of \code{\link[e1071]{svm}}.}
-  \item{randomForest_options}{a list for options of \code{\link[randomForest]{randomForest}}.}
-  \item{naiveBayes_options}{a list for options of \code{\link[e1071]{naiveBayes}}.}
-  \item{cv.glmnet_options}{a list for options of \code{\link[glmnet]{cv.glmnet}}.}
-  \item{nnet_options}{a list for options of \code{\link[nnet]{nnet}}.}
   \item{...}{not used currently.} 
 
 }
@@ -39,7 +32,7 @@ Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Bin
 
 
 \value{
-A list with class "dceGMDH" containing the following components:
+A list with class "GMDH" containing the following components:
 
 \item{architecture}{all objects stored in construction  process of network}
 \item{nlayer}{the number of layers}
@@ -47,10 +40,12 @@ A list with class "dceGMDH" containing the following components:
 \item{sneurons}{the number of selected neurons in layers}
 \item{structure}{the summary structure of the process}
 \item{levels}{the levels of binary response}
-\item{base_perf}{the performances of the classifiers on validation set at base training}
-\item{base_models}{the constructed base classifiers models}
 \item{train.indices}{the indices of training set}
 \item{valid.indices}{the indices of validation set}
+\item{features}{the names of variables used in GMDH algorithm}
+\item{pfeatures}{the column number of variables used in GMDH algorithm}
+\item{nvar}{the number of variables in the data set}
+
 
 }
 
@@ -104,15 +99,8 @@ y.test <- ydata[test.indices]
 
 set.seed(seed)
 
-# to construct model via dce-GMDH algorithm
-model <- dceGMDH(x.train, y.train)
-
-# to obtain predicted classes for train set
-predict(model, x.train)
-
-# to obtain predicted classes for test set
-predict(model, x.test)
-
+# to construct model via GMDH algorithm
+model <- GMDH(x.train, y.train)
 
 
 }
