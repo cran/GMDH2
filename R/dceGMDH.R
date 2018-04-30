@@ -1,7 +1,6 @@
-dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", plot = TRUE, verbose = TRUE, svm_options, randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, ...){
+dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", verbose = TRUE, svm_options, randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, ...){
   
   
-  call <- match.call()
   
   if (!is.matrix(x)) stop("x must be a matrix.")
   if (!is.factor(y)) stop("y must be a factor.")
@@ -12,7 +11,6 @@ dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons =
   
   if (exCriterion == "MSE")  {outname<- "Mean Square Error"
 }else if (exCriterion == "MAE") {outname<- "Mean Absolute Error"
-}else if (exCriterion == "MAPE") {outname<- "Mean Absolute Percentage Error"
 }else stop("Correct the external criterion argument.")
   
   
@@ -24,7 +22,6 @@ dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons =
     
     if (measure == "MSE")  {out <- mean((data-reference)^2)
     }else if (measure == "MAE"){out <- mean(abs(data-reference))
-}else if (measure == "MAPE"){out <- 100*mean(abs((data-reference)/reference))
 }else stop("Please correct the external criteria.")
     
     return(out)
@@ -203,11 +200,9 @@ nlayer<-ifelse (!((store[[i]][[12]]>=store[[i-1]][[12]])|((i-1)==maxlayers))&(st
 }
 
 
-if (plot == TRUE){
-  plot(c(0:i),perf, main = "Performance for Validation Set",xlab = "Layer", ylab = outname,  type = "b", xaxt="n")
-  abline(h = 0, v = nlayer, lty = 2)
-  axis(1, at = c(0:(nlayer+1)))
-}
+
+plot_list <- list(c(0:i),perf,ylab = outname,h = 0, v = nlayer)
+
 
 
 if (nlayer==0) {
@@ -247,8 +242,6 @@ colnames(structure) <- c("Layer", "   ","Neurons","   ","Selected neurons","   "
 
 if (verbose) {
   cat("\n")
-  print(call)  
-  cat("\n")
   cat("  Structure :", "\n\n", sep = " ")
   print(structure)
   cat("\n")
@@ -267,9 +260,10 @@ result$base_perf <- base_perf
 result$base_models <- base_models
 result$train.indices <- train.indices
 result$valid.indices <- validation.indices
+result$classifiers <- cnames[sort(selected)]
+result$plot_list <- plot_list
 
-
-attr(result, "class") <- "dceGMDH"
+attr(result, "class") <- c("dceGMDH", "GMDHplot")
 invisible(result)
 
 

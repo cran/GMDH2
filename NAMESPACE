@@ -1,6 +1,7 @@
 export(confMat, cplot2d, cplot3d, dceGMDH, Table, GMDH)
 S3method(predict, dceGMDH)
 S3method(predict, GMDH)
+S3method(plot, GMDHplot)
 S3method(confMat, default)
 S3method(confMat, table)
 importFrom("utils", combn)

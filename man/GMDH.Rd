@@ -9,7 +9,7 @@ Classification and Feature Selection via GMDH-Type Neural Network Algorithm for 
 }
 
 \usage{GMDH(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, 
-  exCriterion = "MSE", plot = TRUE, verbose = TRUE, ...)}
+  exCriterion = "MSE", verbose = TRUE, ...)}
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,7 +20,6 @@ Classification and Feature Selection via GMDH-Type Neural Network Algorithm for 
   \item{maxlayers}{the number of maximum layers. Defaults maxlayers = 10.} 
   \item{maxneurons}{the number of maximum neurons selected in each layer. Defaults maxneurons = 15.} 
   \item{exCriterion}{a character string to select an external criteria. "MSE": Mean Square Error, "MAE": Mean Absolute Error, "MAPE": Mean Absolute Percentage Error. Default is set to "MSE".} 
-  \item{plot}{a logical to plot the minimum external criteria in layers. Defaults plot = TRUE.}
   \item{verbose}{a logical for printing summary output to R console.}
   \item{...}{not used currently.} 
 
@@ -32,7 +31,7 @@ Classification and Feature Selection via GMDH-Type Neural Network Algorithm for 
 
 
 \value{
-A list with class "GMDH" containing the following components:
+A list with class "GMDH" and "GMDHplot" containing the following components:
 
 \item{architecture}{all objects stored in construction  process of network}
 \item{nlayer}{the number of layers}
@@ -45,7 +44,7 @@ A list with class "GMDH" containing the following components:
 \item{features}{the names of variables used in GMDH algorithm}
 \item{pfeatures}{the column number of variables used in GMDH algorithm}
 \item{nvar}{the number of variables in the data set}
-
+\item{plot_list}{the list of objects to be used in \code{plot.GMDHplot}}
 
 }
 

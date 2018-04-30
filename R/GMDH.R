@@ -1,7 +1,6 @@
-GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", plot = TRUE, verbose = TRUE, ...){
+GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", verbose = TRUE, ...){
   
   
-  call <- match.call()
   
   if (!is.matrix(x)) stop("x must be a matrix.")
   if (!is.factor(y)) stop("y must be a factor.")
@@ -12,7 +11,6 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
   
   if (exCriterion == "MSE")  {outname<- "Mean Square Error"
   }else if (exCriterion == "MAE") {outname<- "Mean Absolute Error"
-  }else if (exCriterion == "MAPE") {outname<- "Mean Absolute Percentage Error"
   }else stop("Correct the external criterion argument.")
   
   
@@ -24,7 +22,6 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
     
     if (measure == "MSE")  {out <- mean((data-reference)^2)
     }else if (measure == "MAE"){out <- mean(abs(data-reference))
-    }else if (measure == "MAPE"){out <- 100*mean(abs((data-reference)/reference))
     }else stop("Please correct the external criteria.")
     
     return(out)
@@ -127,11 +124,7 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
   }
   
   
-  if (plot == TRUE){
-    plot(c(1:i),perf, main = "Performance for Validation Set",xlab = "Layer", ylab = outname,  type = "b", xaxt="n")
-    abline(h = 1, v = nlayer, lty = 2)
-    axis(1, at = c(1:i))
-  }
+plot_list <- list(c(1:i),perf,ylab = outname,h = 1, v = nlayer)
   
   
   
@@ -160,8 +153,6 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
   
   if (verbose) {
     cat("\n")
-    print(call)  
-    cat("\n")
     cat("  Structure :", "\n\n", sep = " ")
     print(structure, row.names = FALSE)
     cat("\n")
@@ -181,8 +172,9 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
   result$features <- cnames[sort(selected)]
   result$pfeatures <- sort(selected)
   result$nvar <- nvar
+  result$plot_list <- plot_list
   
-  attr(result, "class") <- "GMDH"
+  attr(result, "class") <- c("GMDH","GMDHplot")
   invisible(result)
   
   

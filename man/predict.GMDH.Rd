@@ -11,7 +11,7 @@
 \arguments{
   \item{object}{an object of class \code{"GMDH"}, created by \code{GMDH}.}
   \item{x}{a matrix containing the new input data.}
-  \item{type}{a character string to return predited output. If type = "class", the function returns the predicted classes. If type = "probability", it returns the predicted probabilities. Default is set to "class".}
+  \item{type}{a character string to return predicted output. If type = "class", the function returns the predicted classes. If type = "probability", it returns the predicted probabilities. Default is set to "class".}
   \item{\dots}{currently not used.}
 }
 \value{

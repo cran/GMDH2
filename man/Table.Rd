@@ -8,7 +8,7 @@ Table for Simple Descriptive Statistics}
 } 
 
 \usage{Table(x, y, option = "min-max", percentages = "column", ndigits = c(2,1), 
-  output = NULL)}
+  output = "R")}
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,7 +17,7 @@ Table for Simple Descriptive Statistics}
   \item{option}{an option to return "min-max" or "Q1-Q3". Default is set to "min-max".}
   \item{percentages}{a character string to select the desired percentages. To use column or row percentages, percentages should be set to "column" or "row", respectively. The percentages argument is set to "total" to obtain total percentages. Default is set to "column".} 
   \item{ndigits}{a vector of two numbers. The first one is used to specify the number of digit for numeric/integer variables. The second one specifies the number of digits for percentages of factor/ordered variables. Default is set to ndigits = c(2,1).} 
-  \item{output}{a character string to specify the format of descriptive statistics. If output = "latex", it returns the table as latex format. If output = "html", it produces the table as html format. If output = NULL, it returns the table in R console.} 
+  \item{output}{a character string to specify the format of descriptive statistics. If output = "LaTeX", it returns the table as latex format. If output = "HTML", it produces the table as html format. If output = "R", it returns the table in R console.} 
 
 }
 

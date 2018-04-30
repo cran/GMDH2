@@ -1,4 +1,4 @@
-Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(2,1), output = NULL) {
+Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(2,1), output = "R") {
   
   if (class(x)!="data.frame") stop("x must be a data.frame.")
   if (class(y)!="factor") stop("y must be a factor.")
@@ -108,7 +108,7 @@ Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(
   colnames(size) <- c(" ", y.levels)
   store3 <- rbind(size, store3)
   
-  if (is.null(output)){
+  if (output == "R"){
   underline <- data.frame(matrix(rep("---",3),1,3))
   colnames(underline) <- c(" ", y.levels)
   store3 <- rbind(underline,store3)
@@ -130,18 +130,18 @@ Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(
   }
   maxentry <- sum(apply(ncharacter, MARGIN = 2, function(x) max(x, na.rm=TRUE)))
   
-  if (is.null(output)){
+  if (output == "R"){
   
   line<-paste(c("|",rep("=",maxentry+5),"|"),sep = "")
   cat("\n",line,sep = "","\n")
   print(store4,row.names = FALSE)
   cat(line,sep = "","\n\n")
-  }else if (output == "latex"){
+  }else if (output == "LaTeX"){
     
     out <- xtable(store4, align = "rrrrrr")
     print(out,include.rownames = FALSE)
     
-  }else if (output == "html"){
+  }else if (output == "HTML"){
     
     out <- xtable(store4, align = "rrrrrr")
     print(out, type = "html", include.rownames = FALSE)
