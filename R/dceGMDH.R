@@ -61,7 +61,7 @@ dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons =
   
   cv.glmnet_func <- function(x,y,cv.glmnet_options){
     if (missing(cv.glmnet_options)){
-      out <- cv.glmnet(x,y, family = "binomial")
+      out <- cv.glmnet(x,y, family = "binomial", alpha=0.5)
     } else {
       out <- do.call(cv.glmnet, c(list(x,y, family = "binomial"), cv.glmnet_options))
     }
@@ -240,14 +240,22 @@ if (nlayer==0){
 structure <- as.data.frame(cbind(0:nlayer, "",tneurons,"",sneurons,"", perf))
 colnames(structure) <- c("Layer", "   ","Neurons","   ","Selected neurons","   ", paste("Min",exCriterion))
 
+
+cnames2 <- data.frame(cnames[sort(selected)])
+colnames(cnames2)<-""
+
 if (verbose) {
   cat("\n")
-  cat("  Structure :", "\n\n", sep = " ")
-  print(structure)
+  cat(" Structure :", "\n\n", sep = " ")
+    print(structure, row.names = FALSE)
   cat("\n")
-  cat("  The assembled classifiers :", cnames[sort(selected)])
+
+  cat(" External criterion   :", outname, "\n\n", sep = " ")
+  cat(paste(" Classifiers ensemble :", length(cnames[sort(selected)]), "out of",5,"classifiers are assembled."),"\n")
+  print(cnames2, row.names = FALSE) 
   cat("\n\n")
-  cat("  External criterion        :", outname, "\n\n", sep = " ")}
+
+}
 
 result <- list()
 result$architecture <- store_last

@@ -16,11 +16,11 @@ Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Bin
 \arguments{
   \item{x}{a nxp matrix, n is the number of observations and p is the number of variables.}
   \item{y}{a factor of binary response variable.}
-  \item{rate}{the rate of observations to be included in train set. The rest of the observations is used for validation. Defaults rate = 0.75.} 
+  \item{rate}{the rate of observations to be included in model construction. The rest of the observations is used for neuron selection. Defaults rate = 0.75.} 
   \item{alpha}{the selection pressure in a layer.  Defaults alpha = 0.6.} 
   \item{maxlayers}{the number of maximum layers. Defaults maxlayers = 10.} 
   \item{maxneurons}{the number of maximum neurons selected in each layer. Defaults maxneurons = 15.} 
-  \item{exCriterion}{a character string to select an external criteria. "MSE": Mean Square Error, "MAE": Mean Absolute Error, "MAPE": Mean Absolute Percentage Error. Default is set to "MSE".} 
+  \item{exCriterion}{a character string to select an external criteria. "MSE": Mean Square Error, "MAE": Mean Absolute Error. Default is set to "MSE".} 
   \item{verbose}{a logical for printing summary output to R console.}
   \item{svm_options}{a list for options of \code{\link[e1071]{svm}}.}
   \item{randomForest_options}{a list for options of \code{\link[randomForest]{randomForest}}.}
@@ -83,23 +83,23 @@ data <- BreastCancer
 completeObs <- complete.cases(data)
 data <- data[completeObs,]
 
-xdata <- data.matrix(data[,2:10])
-ydata <- data[,11]
+x <- data.matrix(data[,2:10])
+y <- data[,11]
 
-seed <- 10
+seed <- 11111
 set.seed(seed)
 
-no.rows <- length(ydata)
+nobs <- length(y)
 
 # to split train and test sets
-train.indices <- sort(sample(1:no.rows, round(no.rows*0.8,0)))
-test.indices <- (1:no.rows)[-train.indices]
+train.indices <- sort(sample(1:nobs, round(nobs*0.8,0)))
+test.indices <- (1:nobs)[-train.indices]
 
-x.train <- xdata[train.indices,]
-y.train <- ydata[train.indices]
+x.train <- x[train.indices,]
+y.train <- y[train.indices]
 
-x.test <- xdata[test.indices,]
-y.test <- ydata[test.indices]
+x.test <- x[test.indices,]
+y.test <- y[test.indices]
 
 
 set.seed(seed)

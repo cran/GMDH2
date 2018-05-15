@@ -151,14 +151,20 @@ plot_list <- list(c(1:i),perf,ylab = outname,h = 1, v = nlayer)
   structure <- as.data.frame(cbind(1:nlayer, "",tneurons,"",sneurons,"", perf))
   colnames(structure) <- c("Layer", "   ","Neurons","   ","Selected neurons","   ", paste("Min",exCriterion))
   
+  cnames2 <- data.frame(cnames[sort(selected)])
+  colnames(cnames2)<-""
   if (verbose) {
     cat("\n")
-    cat("  Structure :", "\n\n", sep = " ")
+    cat(" Structure :", "\n\n", sep = " ")
     print(structure, row.names = FALSE)
     cat("\n")
-    cat("  The features selected :", cnames[sort(selected)])
+   
+    cat(" External criterion :", outname, "\n\n", sep = " ")
+    cat(paste(" Feature selection  :", length(cnames[sort(selected)]), "out of",nvar,"variables are selected."),"\n")
+    print(cnames2, row.names = FALSE) 
     cat("\n\n")
-    cat("  External criterion    :", outname, "\n\n", sep = " ")}
+
+}
   
   result <- list()
   result$architecture <- store_last

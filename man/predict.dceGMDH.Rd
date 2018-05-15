@@ -36,23 +36,23 @@ data <- BreastCancer
 completeObs <- complete.cases(data)
 data <- data[completeObs,]
 
-xdata <- data.matrix(data[,2:10])
-ydata <- data[,11]
+x <- data.matrix(data[,2:10])
+y <- data[,11]
 
-seed <- 10
+seed <- 11111
 set.seed(seed)
 
-no.rows <- length(ydata)
+nobs <- length(y)
 
 # to split train and test sets
-train.indices <- sort(sample(1:no.rows, round(no.rows*0.8,0)))
-test.indices <- (1:no.rows)[-train.indices]
+train.indices <- sort(sample(1:nobs, round(nobs*0.8,0)))
+test.indices <- (1:nobs)[-train.indices]
 
-x.train <- xdata[train.indices,]
-y.train <- ydata[train.indices]
+x.train <- x[train.indices,]
+y.train <- y[train.indices]
 
-x.test <- xdata[test.indices,]
-y.test <- ydata[test.indices]
+x.test <- x[test.indices,]
+y.test <- y[test.indices]
 
 
 set.seed(seed)

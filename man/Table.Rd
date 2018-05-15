@@ -41,10 +41,10 @@ data <- BreastCancer
 completeObs <- complete.cases(data)
 data <- data[completeObs,]
 
-xdata <- data[,2:10]
-ydata <- data[,11]
+x <- data[,2:10]
+y <- data[,11]
 
-Table (xdata, ydata)
+Table(x, y)
 
 }
 
