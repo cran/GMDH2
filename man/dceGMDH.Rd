@@ -8,15 +8,16 @@ Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Bin
 \code{dceGMDH} makes a binary classification via diverse classifiers ensemble Based on GMDH-Type Neural Network (dce-GMDH) Algorithm.
 }
 
-\usage{dceGMDH(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, 
-  exCriterion = "MSE", verbose = TRUE, svm_options, randomForest_options, 
-  naiveBayes_options, cv.glmnet_options, nnet_options, ...)}
+\usage{dceGMDH(x.train, y.train, x.valid, y.valid, alpha = 0.6, maxlayers = 10, 
+  maxneurons = 15, exCriterion = "MSE", verbose = TRUE, svm_options, 
+   randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, ...)}
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a nxp matrix, n is the number of observations and p is the number of variables.}
-  \item{y}{a factor of binary response variable.}
-  \item{rate}{the rate of observations to be included in model construction. The rest of the observations is used for neuron selection. Defaults rate = 0.75.} 
+  \item{x.train}{a n1xp matrix to be included in model construction, n1 is the number of observations and p is the number of variables.}
+  \item{y.train}{a factor of binary response variable to be included in model construction.}
+  \item{x.valid}{a n2xp matrix to be used for neuron selection, n2 is the number of observations and p is the number of variables.}
+  \item{y.valid}{a factor of binary response variable to be used for neuron selection.}
   \item{alpha}{the selection pressure in a layer.  Defaults alpha = 0.6.} 
   \item{maxlayers}{the number of maximum layers. Defaults maxlayers = 10.} 
   \item{maxneurons}{the number of maximum neurons selected in each layer. Defaults maxneurons = 15.} 
@@ -47,8 +48,6 @@ A list with class "dceGMDH" and "GMDHplot" containing the following components:
 \item{levels}{the levels of binary response}
 \item{base_perf}{the performances of the classifiers on validation set at base training}
 \item{base_models}{the constructed base classifiers models}
-\item{train.indices}{the indices of training set}
-\item{valid.indices}{the indices of validation set}
 \item{classifiers}{the names of assembled classifiers}
 \item{plot_list}{the list of objects to be used in \code{plot.GMDHplot}}
 
@@ -86,29 +85,35 @@ data <- data[completeObs,]
 x <- data.matrix(data[,2:10])
 y <- data[,11]
 
-seed <- 11111
+seed <- 12345
 set.seed(seed)
-
 nobs <- length(y)
 
-# to split train and test sets
-train.indices <- sort(sample(1:nobs, round(nobs*0.8,0)))
-test.indices <- (1:nobs)[-train.indices]
+# to split train, validation and test sets
+
+indices <- sample(1:nobs)
+
+ntrain <- round(nobs*0.6,0)
+nvalid <- round(nobs*0.2,0)
+ntest <- nobs-(ntrain+nvalid)
+
+train.indices <- sort(indices[1:ntrain])
+valid.indices <- sort(indices[(ntrain+1):(ntrain+nvalid)])
+test.indices <- sort(indices[(ntrain+nvalid+1):nobs])
+
 
 x.train <- x[train.indices,]
 y.train <- y[train.indices]
 
+x.valid <- x[valid.indices,]
+y.valid <- y[valid.indices]
+
 x.test <- x[test.indices,]
 y.test <- y[test.indices]
 
-
 set.seed(seed)
-
 # to construct model via dce-GMDH algorithm
-model <- dceGMDH(x.train, y.train)
-
-# to obtain predicted classes for train set
-predict(model, x.train)
+model <- dceGMDH(x.train, y.train, x.valid, y.valid)
 
 # to obtain predicted classes for test set
 predict(model, x.test)

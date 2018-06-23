@@ -2,20 +2,21 @@
 \alias{GMDH}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Classification and Feature Selection via GMDH-Type Neural Network Algorithm for a Binary Response
+Feature Selection and Classification via GMDH-Type Neural Network Algorithm for a Binary Response
 }
 \description{
-\code{GMDH} makes classification and feature selection via GMDH-type neural network algorithm.
+\code{GMDH} makes feature selection and classification via GMDH-type neural network algorithm.
 }
 
-\usage{GMDH(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, 
+\usage{GMDH(x.train, y.train, x.valid, y.valid, alpha = 0.6, maxlayers = 10, maxneurons = 15, 
   exCriterion = "MSE", verbose = TRUE, ...)}
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a nxp matrix, n is the number of observations and p is the number of variables.}
-  \item{y}{a factor of binary response variable.}
-  \item{rate}{the rate of observations to be included in model construction. The rest of the observations is used for neuron selection. Defaults rate = 0.75.} 
+  \item{x.train}{a n1xp matrix to be included in model construction, n1 is the number of observations and p is the number of variables.}
+  \item{y.train}{a factor of binary response variable to be included in model construction.}
+  \item{x.valid}{a n2xp matrix to be used for neuron selection, n2 is the number of observations and p is the number of variables.}
+  \item{y.valid}{a factor of binary response variable to be used for neuron selection.}
   \item{alpha}{the selection pressure in a layer.  Defaults alpha = 0.6.} 
   \item{maxlayers}{the number of maximum layers. Defaults maxlayers = 10.} 
   \item{maxneurons}{the number of maximum neurons selected in each layer. Defaults maxneurons = 15.} 
@@ -39,8 +40,6 @@ A list with class "GMDH" and "GMDHplot" containing the following components:
 \item{sneurons}{the number of selected neurons in layers}
 \item{structure}{the summary structure of the process}
 \item{levels}{the levels of binary response}
-\item{train.indices}{the indices of training set}
-\item{valid.indices}{the indices of validation set}
 \item{features}{the names of variables used in GMDH algorithm}
 \item{pfeatures}{the column number of variables used in GMDH algorithm}
 \item{nvar}{the number of variables in the data set}
@@ -80,27 +79,36 @@ data <- data[completeObs,]
 x <- data.matrix(data[,2:10])
 y <- data[,11]
 
-seed <- 11111
+seed <- 12345
 set.seed(seed)
-
 nobs <- length(y)
 
-# to split train and test sets
-train.indices <- sort(sample(1:nobs, round(nobs*0.8,0)))
-test.indices <- (1:nobs)[-train.indices]
+# to split train, validation and test sets
+
+indices <- sample(1:nobs)
+
+ntrain <- round(nobs*0.6,0)
+nvalid <- round(nobs*0.2,0)
+ntest <- nobs-(ntrain+nvalid)
+
+train.indices <- sort(indices[1:ntrain])
+valid.indices <- sort(indices[(ntrain+1):(ntrain+nvalid)])
+test.indices <- sort(indices[(ntrain+nvalid+1):nobs])
+
 
 x.train <- x[train.indices,]
 y.train <- y[train.indices]
 
+x.valid <- x[valid.indices,]
+y.valid <- y[valid.indices]
+
 x.test <- x[test.indices,]
 y.test <- y[test.indices]
 
-
 set.seed(seed)
-
 # to construct model via GMDH algorithm
-model <- GMDH(x.train, y.train)
-
+model <- GMDH(x.train, y.train, x.valid, y.valid)
+predict(model, x.test)
 
 }
 

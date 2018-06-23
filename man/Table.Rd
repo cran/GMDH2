@@ -45,6 +45,8 @@ x <- data[,2:10]
 y <- data[,11]
 
 Table(x, y)
+Table(x, y, output = "LaTeX")
+
 
 }
 

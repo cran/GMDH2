@@ -1,14 +1,18 @@
-dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", verbose = TRUE, svm_options, randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, ...){
+dceGMDH <- function(x.train, y.train, x.valid, y.valid, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", verbose = TRUE, svm_options, randomForest_options, naiveBayes_options, cv.glmnet_options, nnet_options, ...){
   
   
+  if (!is.matrix(x.train)) stop("x.train must be a matrix.")
+  if (!is.matrix(x.valid)) stop("x.valid must be a matrix.")
+  if (!is.factor(y.train)) stop("y.train must be a factor.")
+  if (!is.factor(y.valid)) stop("y.valid must be a factor.")
+  if (any(levels(y.train)!=levels(y.valid))) stop("Levels of y.train and y.valid are not equal.")
+  if (any(colnames(x.train)!=colnames(x.valid))) stop("Column names of x.train and x.valid are not same.")
+
+  ylevels <- levels(y.train)
+  y.train <- factor(y.train, levels = ylevels, labels = 0:1)
+  y.valid <- factor(y.valid, levels = ylevels, labels = 0:1)
   
-  if (!is.matrix(x)) stop("x must be a matrix.")
-  if (!is.factor(y)) stop("y must be a factor.")
-  if ((rate<=0)|(rate>=1)) stop("rate must be between 0 and 1. Minimum rate is suggested to be 0.5.")
-  
-  ylevels <- levels(y)
-  y <- factor(y, levels = ylevels, labels = 0:1)
-  
+
   if (exCriterion == "MSE")  {outname<- "Mean Square Error"
 }else if (exCriterion == "MAE") {outname<- "Mean Absolute Error"
 }else stop("Correct the external criterion argument.")
@@ -79,19 +83,6 @@ dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons =
     return(list(model = out, pred_prob = as.numeric(result[,colnames(result)=="1"])))
   }
   
-  ndata <- dim(x)[1]
-  nvar<-dim(x)[2]
-  
-  ntrain <- round(rate*ndata,0)
-  nvalidation <- ndata - ntrain
-  
-  train.indices <- sort(sample(1:ndata, ntrain))
-  validation.indices <- (1:ndata)[-train.indices]
-  
-  x.train <- x[train.indices,]
-  y.train <- y[train.indices]
-  x.validation <- x[validation.indices,]
-  y.validation <- y[validation.indices]
   
   
   svm_result <- svm_func(x.train,y.train,svm_options)
@@ -101,27 +92,27 @@ dceGMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons =
   nnet_result <- nnet_func(x.train,y.train,nnet_options)
   
 
-result <- attr(predict(svm_result$model, x.validation, decision.values = F, probability = TRUE), "probabilities")
+result <- attr(predict(svm_result$model, x.valid, decision.values = F, probability = TRUE), "probabilities")
 ypred_svm <- as.numeric(result[,colnames(result)=="1"])
 
-result <- predict(randomForest_result$model, x.validation, type = "prob")
+result <- predict(randomForest_result$model, x.valid, type = "prob")
 ypred_randomForest <- as.numeric(result[,colnames(result)=="1"])
 
-result <- predict(naiveBayes_result$model, x.validation, type = "raw")
+result <- predict(naiveBayes_result$model, x.valid, type = "raw")
 ypred_naiveBayes <- as.numeric(result[,colnames(result)=="1"])
 
-result <- predict(cv.glmnet_result$model, x.validation, s = "lambda.min", type = "response")
+result <- predict(cv.glmnet_result$model, x.valid, s = "lambda.min", type = "response")
 ypred_cv.glmnet <- result[,1]
 
-result <- predict(nnet_result$model, x.validation, type = "raw")
+result <- predict(nnet_result$model, x.valid, type = "raw")
 ypred_nnet <- as.numeric(result[,colnames(result)=="1"])
 
 
 y.train_pred <- cbind(svm_result$pred_prob, randomForest_result$pred_prob, naiveBayes_result$pred_prob, cv.glmnet_result$pred_prob, nnet_result$pred_prob)
-y.validation_pred <- cbind(ypred_svm, ypred_randomForest, ypred_naiveBayes, ypred_cv.glmnet, ypred_nnet)
-base_perf <- c(EXC(ypred_svm,y.validation),EXC(ypred_randomForest,y.validation),
-               EXC(ypred_naiveBayes,y.validation), EXC(ypred_cv.glmnet,y.validation),
-               EXC(ypred_nnet,y.validation))
+y.valid_pred <- cbind(ypred_svm, ypred_randomForest, ypred_naiveBayes, ypred_cv.glmnet, ypred_nnet)
+base_perf <- c(EXC(ypred_svm,y.valid),EXC(ypred_randomForest,y.valid),
+               EXC(ypred_naiveBayes,y.valid), EXC(ypred_cv.glmnet,y.valid),
+               EXC(ypred_nnet,y.valid))
 base_models <- list(svm_result$model, randomForest_result$model, naiveBayes_result$model, cv.glmnet_result$model, nnet_result$model)
 
 cnames <- c("svm","randomForest","naiveBayes","cv.glmnet","nnet")
@@ -139,9 +130,9 @@ store[[i]]<-list()
 
 store[[i]][[1]]<-lapply(1:nnode, function(j) cbind(1, y.train_pred[, w[j, ]]))
 store[[i]][[2]]<-lapply(1:nnode, function(j) ginv(t(store[[i]][[1]][[j]]) %*% store[[i]][[1]][[j]]) %*% t(store[[i]][[1]][[j]]) %*% (as.numeric(y.train)-1))
-store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, y.validation_pred[, w[j, ]]))
+store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, y.valid_pred[, w[j, ]]))
 store[[i]][[4]]<-lapply(1:nnode, function(j) as.numeric(t(store[[i]][[2]][[j]]) %*% t(store[[i]][[3]][[j]])))
-store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriterion))
+store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.valid, measure = exCriterion))
 store[[i]][[13]]<-length(which(unlist(store[[i]][[6]])<(1-alpha)*max(unlist(store[[i]][[6]]))+alpha*min(unlist(store[[i]][[6]]))))
 store[[i]][[14]]<-ifelse(store[[i]][[13]]>maxneurons,maxneurons,store[[i]][[13]]) 
 store[[i]][[7]]<-sort(order(unlist(store[[i]][[6]]), decreasing = FALSE)[1:store[[i]][[14]]])
@@ -171,7 +162,7 @@ if ((store[[i]][[12]]<min(base_perf))&(store[[i]][[14]]>1)){
     store[[i]][[2]]<-lapply(1:nnode, function(j) ginv(t(store[[i]][[1]][[j]]) %*% store[[i]][[1]][[j]]) %*% t(store[[i]][[1]][[j]]) %*% (as.numeric(y.train)-1))
     store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, store[[i-1]][[11]][, w[j, ]]))
     store[[i]][[4]]<-lapply(1:nnode, function(j) as.numeric(t(store[[i]][[2]][[j]]) %*% t(store[[i]][[3]][[j]])))
-    store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriterion))
+    store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.valid, measure = exCriterion))
     store[[i]][[13]]<-length(which(unlist(store[[i]][[6]])<(1-alpha)*max(unlist(store[[i]][[6]]))+alpha*min(unlist(store[[i]][[6]]))))
     store[[i]][[14]]<-ifelse(store[[i]][[13]]>maxneurons,maxneurons,store[[i]][[13]]) 
     store[[i]][[7]]<-sort(order(unlist(store[[i]][[6]]), decreasing = FALSE)[1:store[[i]][[14]]])
@@ -266,8 +257,6 @@ result$structure <- structure
 result$levels <- ylevels
 result$base_perf <- base_perf
 result$base_models <- base_models
-result$train.indices <- train.indices
-result$valid.indices <- validation.indices
 result$classifiers <- cnames[sort(selected)]
 result$plot_list <- plot_list
 

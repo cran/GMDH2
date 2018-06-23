@@ -1,17 +1,20 @@
-GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", verbose = TRUE, ...){
+GMDH <- function(x.train, y.train, x.valid, y.valid, alpha = 0.6, maxlayers = 10, maxneurons = 15, exCriterion = "MSE", verbose = TRUE, ...){
   
+  if (!is.matrix(x.train)) stop("x.train must be a matrix.")
+  if (!is.matrix(x.valid)) stop("x.valid must be a matrix.")
+  if (!is.factor(y.train)) stop("y.train must be a factor.")
+  if (!is.factor(y.valid)) stop("y.valid must be a factor.")
+  if (any(levels(y.train)!=levels(y.valid))) stop("Levels of y.train and y.valid are not equal.")
+  if (any(colnames(x.train)!=colnames(x.valid))) stop("Column names of x.train and x.valid are not same.")
+
+  ylevels <- levels(y.train)
+  y.train <- factor(y.train, levels = ylevels, labels = 0:1)
+  y.valid <- factor(y.valid, levels = ylevels, labels = 0:1)
   
-  
-  if (!is.matrix(x)) stop("x must be a matrix.")
-  if (!is.factor(y)) stop("y must be a factor.")
-  if ((rate<=0)|(rate>=1)) stop("rate must be between 0 and 1. Minimum rate is suggested to be 0.5.")
-  
-  ylevels <- levels(y)
-  y <- factor(y, levels = ylevels, labels = 0:1)
   
   if (exCriterion == "MSE")  {outname<- "Mean Square Error"
   }else if (exCriterion == "MAE") {outname<- "Mean Absolute Error"
-  }else stop("Correct the external criterion argument.")
+  }else stop("Please correct the external criterion argument.")
   
   
   EXC <- function(data, reference, measure = "MSE") {
@@ -22,33 +25,19 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
     
     if (measure == "MSE")  {out <- mean((data-reference)^2)
     }else if (measure == "MAE"){out <- mean(abs(data-reference))
-    }else stop("Please correct the external criteria.")
+    }else stop("Please correct the external criterion argument.")
     
     return(out)
   }  
   
   
+  nvar<-dim(x.train)[2]  
   
   
-  ndata <- dim(x)[1]
-  nvar<-dim(x)[2]
+  if (is.null(colnames(x.train))) cnames <- 1:nvar else cnames <- colnames(x.train)
   
-  if (is.null(colnames(x))) cnames <- 1:nvar else cnames <- colnames(x)
-  
-  
-  ntrain <- round(rate*ndata,0)
-  nvalidation <- ndata - ntrain
-  
-  train.indices <- sort(sample(1:ndata, ntrain))
-  validation.indices <- (1:ndata)[-train.indices]
-  
-  x.train <- x[train.indices,]
-  y.train <- y[train.indices]
-  x.validation <- x[validation.indices,]
-  y.validation <- y[validation.indices]
-  
-  
-  
+
+ 
   
   input <- nvar
   nnode = input*(input - 1)/2
@@ -63,9 +52,9 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
   
   store[[i]][[1]]<-lapply(1:nnode, function(j) cbind(1, x.train[, w[j, ]]))
   store[[i]][[2]]<-lapply(1:nnode, function(j) ginv(t(store[[i]][[1]][[j]]) %*% store[[i]][[1]][[j]]) %*% t(store[[i]][[1]][[j]]) %*% (as.numeric(y.train)-1))
-  store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, x.validation[, w[j, ]]))
+  store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, x.valid[, w[j, ]]))
   store[[i]][[4]]<-lapply(1:nnode, function(j) as.numeric(t(store[[i]][[2]][[j]]) %*% t(store[[i]][[3]][[j]])))
-  store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriterion))
+  store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.valid, measure = exCriterion))
   store[[i]][[13]]<-length(which(unlist(store[[i]][[6]])<(1-alpha)*max(unlist(store[[i]][[6]]))+alpha*min(unlist(store[[i]][[6]]))))
   store[[i]][[14]]<-ifelse(store[[i]][[13]]>maxneurons,maxneurons,store[[i]][[13]]) 
   store[[i]][[7]]<-sort(order(unlist(store[[i]][[6]]), decreasing = FALSE)[1:store[[i]][[14]]])
@@ -95,7 +84,7 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
       store[[i]][[2]]<-lapply(1:nnode, function(j) ginv(t(store[[i]][[1]][[j]]) %*% store[[i]][[1]][[j]]) %*% t(store[[i]][[1]][[j]]) %*% (as.numeric(y.train)-1))
       store[[i]][[3]]<-lapply(1:nnode, function(j) cbind(1, store[[i-1]][[11]][, w[j, ]]))
       store[[i]][[4]]<-lapply(1:nnode, function(j) as.numeric(t(store[[i]][[2]][[j]]) %*% t(store[[i]][[3]][[j]])))
-      store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.validation, measure = exCriterion))
+      store[[i]][[6]]<-lapply(1:nnode, function(j) EXC(store[[i]][[4]][[j]], y.valid, measure = exCriterion))
       store[[i]][[13]]<-length(which(unlist(store[[i]][[6]])<(1-alpha)*max(unlist(store[[i]][[6]]))+alpha*min(unlist(store[[i]][[6]]))))
       store[[i]][[14]]<-ifelse(store[[i]][[13]]>maxneurons,maxneurons,store[[i]][[13]]) 
       store[[i]][[7]]<-sort(order(unlist(store[[i]][[6]]), decreasing = FALSE)[1:store[[i]][[14]]])
@@ -127,13 +116,21 @@ GMDH <- function(x, y, rate = 0.75, alpha = 0.6, maxlayers = 10, maxneurons = 15
 plot_list <- list(c(1:i),perf,ylab = outname,h = 1, v = nlayer)
   
   
-  
-  perf <- perf[1:nlayer]
-  sneurons <- c(do.call("c", lapply((1:(nlayer-1)), function(i) store[[i]][[14]])), 1)
-  tneurons <- c(nvar*(nvar-1)/2,sneurons[-(nlayer)]*(sneurons[-(nlayer)]-1)/2)
-  store_last<-lapply(1:nlayer, function(j) store[[j]])
-  
-  
+
+
+perf <- perf[1:nlayer]
+if(nlayer == 1){
+sneurons <- 1
+tneurons <- nvar*(nvar-1)/2
+}else{
+sneurons <- c(do.call("c", lapply((1:(nlayer-1)), function(i) store[[i]][[14]])), 1)
+tneurons <- c(nvar*(nvar-1)/2,sneurons[-(nlayer)]*(sneurons[-(nlayer)]-1)/2)
+}  
+store_last<-lapply(1:nlayer, function(j) store[[j]])
+    
+
+
+
   
   ninputs <- c(nvar, sneurons[-nlayer])
   selected <- 1
@@ -173,8 +170,6 @@ plot_list <- list(c(1:i),perf,ylab = outname,h = 1, v = nlayer)
   result$sneurons <- sneurons
   result$structure <- structure
   result$levels <- ylevels
-  result$train.indices <- train.indices
-  result$valid.indices <- validation.indices
   result$features <- cnames[sort(selected)]
   result$pfeatures <- sort(selected)
   result$nvar <- nvar
