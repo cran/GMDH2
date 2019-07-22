@@ -1,0 +1,18 @@
+citHeader("To cite GMDH2 in publications use:")
+
+citEntry(entry="article",
+  title  = "{GMDH2: Binary Classification via GMDH-Type Neural Network Algorithms - R Package and Web-Based Tool}",
+  author = personList(as.person("O. Dag"), as.person("E. Karabulut"), as.person("R. Alpar")),
+  journal = "{International Journal of Computational Intelligence Systems}",
+  year = "2019",
+  volume = "12",
+  number = "2",
+  pages = "649--660",
+  url = "https://www.atlantis-press.com/journals/ijcis/125911202",
+  textVersion = paste("Dag, O., Karabulut, E., Alpar, R. (2019).",
+                      "GMDH2: Binary Classification via GMDH-Type Neural Network Algorithms - R Package and Web-Based Tool.",
+                      "International Journal of Computational Intelligence Systems,  12:2, 649-660."))
+
+
+
+

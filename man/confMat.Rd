@@ -46,7 +46,7 @@ TP is the number of true positives, FP is the number of false positives, FN is t
 \deqn{NIR = max(Prevalence, 1 - Prevalence)}
 \deqn{Kappa = \frac{Accuracy - \frac{(TP + FP)(TP + FN)+(FN + TN)(FP + TN)}{(TP + FP + FN + TN)^2}}{1 - \frac{(TP + FP)(TP + FN)+(FN + TN)(FP + TN)}{(TP + FP + FN + TN)^2}}}
 
-\deqn{MCC = \frac{TP \times TN - FN \times FN}{\sqrt{(TP+FP) \times (FN+TN) \times (TP+FN) \times (FP+TN)}} }
+\deqn{MCC = \frac{TP \times TN - FP \times FN}{\sqrt{(TP+FP) \times (FN+TN) \times (TP+FN) \times (FP+TN)}} }
 
 \deqn{Sensitivity = \frac{TP}{TP+FN}}
 \deqn{Specificity = \frac{TN}{TN+FP}}

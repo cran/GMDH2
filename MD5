@@ -1,4 +1,4 @@
-0dcf6821657656d7faa7f62894724697 *DESCRIPTION
+aefd68cec780754f99902b6122b2e7ac *DESCRIPTION
 01d7d5e58ec7094a0f77454fce2ae97c *NAMESPACE
 2fa62bcd4c4b61626caf865faf65bf87 *R/GMDH.R
 f5cea5048008c38b5047585803c6da9e *R/Table.R
@@ -9,13 +9,14 @@ eebcbd101c32135e05159b6f3a0a488e *R/cplot3d.R
 c39bcf47f601b644c8146c48d98363f7 *R/plot.GMDHplot.R
 9fe124056e2edbf9e8d72edfd2ffb4d1 *R/predict.GMDH.R
 9e8b95d6f6e4e6e560bd2762c5106a50 *R/predict.dceGMDH.R
-cc5ee7cb0a286db9cf10c8750ae9c2de *man/GMDH.Rd
-d9da34a6db3109ab509710587482b288 *man/GMDH2.Rd
+10ceb1a2beda4dae2223c4f903be1432 *inst/citation
+0748c89656f970624547cdf71de621a9 *man/GMDH.Rd
+825324d45377d08722cd1b5c9db692ed *man/GMDH2.Rd
 458d6ea4af97e7ffc8f7456128c261d0 *man/Table.Rd
-10a87d6edda1cddf7edb86c3dfe2a1dc *man/confMat.Rd
+70f26d90ec16dd377dca50ab78bebff1 *man/confMat.Rd
 d883564455dab097df714ff1a9ad48c0 *man/cplot2d.Rd
 3b1e23270204385dc5fbb94f862ed430 *man/cplot3d.Rd
-4a9b40975db30492a1c8de8674ca23a7 *man/dceGMDH.Rd
+69b437672f796a0f68e41a7c55c5eff7 *man/dceGMDH.Rd
 d2719ea9b4db4347389ba8cc17bb87a0 *man/plot.GMDHplot.Rd
 4b98992fac9e9737bf977efe82ea6723 *man/predict.GMDH.Rd
 a6b7a50479bf77130b101591c21c1e62 *man/predict.dceGMDH.Rd

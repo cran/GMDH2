@@ -49,13 +49,9 @@ A list with class "GMDH" and "GMDHplot" containing the following components:
 
 \references{
 
-Dag, O., Yozgatligil, C. (2016). GMDH: An R Package for Short Term Forecasting via GMDH-Type Neural Network Algorithms. \emph{The R Journal}, \bold{8:1}, 379-386.
+Dag, O., Karabulut, E., Alpar, R. (2019). GMDH2: Binary Classification via GMDH-Type Neural Network Algorithms - R Package and Web-Based Tool. \emph{International Journal of Computational Intelligence Systems}, \bold{12:2}, 649-660.
 
-Ivakhnenko, A. G. (1966). Group Method of Data Handling - A Rival of the Method of Stochastic Approximation. \emph{Soviet Automatic Control}, \bold{13}, 43-71.
-
-Kondo, T., Ueno, J. (2006). Revised GMDH-Type Neural Network Algorithm With A Feedback Loop Identifying Sigmoid Function Neural Network. \emph{International Journal of Innovative Computing, Information and Control}, \bold{2:5}, 985-996. 
 }
-
 
 \author{
 Osman Dag, Erdem Karabulut, Reha Alpar
