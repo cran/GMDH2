@@ -14,5 +14,16 @@ citEntry(entry="article",
                       "International Journal of Computational Intelligence Systems,  12:2, 649-660."))
 
 
-
-
+citEntry(entry="article",
+  title  = "Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Binary Classification",
+  author = personList(as.person("O. Dag"), as.person("M. Kasikci"), as.person("E. Karabulut"), as.person("R. Alpar")),
+  journal = "Communications in Statistics - Simulation and Computation",
+  year = "2019",
+  volume = "",
+  number = "",
+  pages = "1--17",
+  url = "https://www.tandfonline.com/doi/full/10.1080/03610918.2019.1697451",
+  textVersion = paste("Dag, O., Kasikci, M., Karabulut, E., Alpar, R. (2019).",
+                      "Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Binary Classification.",
+                      "Communications in Statistics - Simulation and Computation, 1-17."),
+  header       = "If dceGMDH is used, please also cite:")
