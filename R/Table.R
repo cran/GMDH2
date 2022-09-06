@@ -1,7 +1,7 @@
 Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(2,1), output = "R") {
   
-  if (class(x)!="data.frame") stop("x must be a data.frame.")
-  if (class(y)!="factor") stop("y must be a factor.")
+  if (!is.data.frame(x)) stop("x must be a data.frame.")
+  if (!is.factor(y)) stop("y must be a factor.")
   if (all(complete.cases(x))==FALSE) stop("x includes missing observations.") 
   if (all(complete.cases(y))==FALSE) stop("y includes missing observations.") 
   if (dim(x)[1]!=length(y)) stop("The numbers of observations in x and y must be equal.")
@@ -44,7 +44,7 @@ Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(
   for (i in 1:nvar){
     store2 <- NULL
     varnames <- colnames(x)
-    if ((any(class(x[,i])=="numeric")==TRUE)|(any(class(x[,i])=="integer")==TRUE)){
+    if ((any(is.numeric(x[,i]))==TRUE)|(any(is.integer(x[,i]))==TRUE)){
       
       x.mean <- x.median <- x.firstq <- x.thirdq <- x.min <- x.max <- x.sd <- NULL
       
@@ -72,7 +72,7 @@ Table <- function(x, y, option = "min-max", percentages = "column", ndigits = c(
       
       store2 <- data.frame(varnames[i], store2)
       
-    }else if (any(class(x[,i])=="factor")==TRUE){
+    }else if (any(is.factor(x[,i]))==TRUE){
       
       freq <- as.data.frame.matrix(table(x[,i],y))
       
