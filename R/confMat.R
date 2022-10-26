@@ -47,7 +47,7 @@ rownames(store) <- colnames(store)
   
   
   denom <-colSums(store)[1]*colSums(store)[2]*rowSums(store)[1]*rowSums(store)[2]
-if(denom==0) denom<-1
+
   MCC <- (store[1,1]*store[2,2]-store[1,2]*store[2,1])/sqrt(denom)
 
   ccr <- diag(store)/colSums(store)
@@ -162,7 +162,7 @@ rownames(store) <- colnames(store)
   kappa <- (accuracy-pc)/(1-pc) 
   
   denom <-colSums(store)[1]*colSums(store)[2]*rowSums(store)[1]*rowSums(store)[2]
-if(denom==0) denom<-1
+
   MCC <- (store[1,1]*store[2,2]-store[1,2]*store[2,1])/sqrt(denom)
 
   ccr <- diag(store)/colSums(store)

@@ -56,6 +56,9 @@ A list with class "dceGMDH" and "GMDHplot" containing the following components:
 \references{
 
 Dag, O., Karabulut, E., Alpar, R. (2019). GMDH2: Binary Classification via GMDH-Type Neural Network Algorithms - R Package and Web-Based Tool. \emph{International Journal of Computational Intelligence Systems}, \bold{12:2}, 649-660.
+
+Dag, O., Kasikci, M., Karabulut, E., Alpar, R. (2022). Diverse Classifiers Ensemble Based on GMDH-Type Neural Network Algorithm for Binary Classification. \emph{Communications in Statistics - Simulation and Computation}, \bold{51:5}, 2440-2456.
+
 }
 
 \author{
